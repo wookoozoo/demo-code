@@ -20,7 +20,7 @@ public class PoiTest {
 
         try {
             Workbook wb = WorkbookFactory.create(new FileInputStream(
-                    "xxxx.xlsx"));
+                    "/home/atell/Dropbox/apps/isv-excel/5月ISV数据核对（11488.31）- 咕咕叽.xlsx"));
             Sheet sheet = wb.getSheetAt(0);
 
             int c = 0;
@@ -30,20 +30,34 @@ public class PoiTest {
                     skiped = true;
                     continue;
                 }
-                c++;
                 Date gmtCreate = row.getCell(3).getDateCellValue();
-                if(gmtCreate==null){
+                if (gmtCreate == null) {
                     continue;
                 }
-                String companyName = row.getCell(4).getStringCellValue();
-                Date serviceBeginDate = row.getCell(11).getDateCellValue();
-                Date serviceEndDate = row.getCell(12).getDateCellValue();
+              //过滤一些日期
+                Date date = DateUtils.parseDate("2013-05-01 00:00:00", new String[] { "yyyy-MM-dd HH:mm:ss" });
+                if (gmtCreate.before(date)) {
+                    continue;
+                }
+                date = DateUtils.parseDate("2013-05-23 00:00:00", new String[] { "yyyy-MM-dd HH:mm:ss" });
+                if (gmtCreate.after(date)) {
+                    continue;
+                }
+                c++;
+                String companyName = null;
+                try {
+                    companyName = row.getCell(4).getStringCellValue();
+                } catch (Exception e) {
+                    companyName = String.valueOf(row.getCell(4).getNumericCellValue());
+                }
+                Date serviceBeginDate = row.getCell(9).getDateCellValue();
+                Date serviceEndDate = row.getCell(10).getDateCellValue();
                 String bizStatus = "X";
                 double payment_amount = Double.valueOf(row.getCell(6).getNumericCellValue());
                 double execPrice = Double.valueOf(row.getCell(5).getNumericCellValue());
 
-                System.out.println(c+":"+gmtCreate + "," + companyName + "," + serviceBeginDate + "," + serviceEndDate + ","
-                        + bizStatus + "," + payment_amount + "," + execPrice);
+                System.out.println(c + ":" + gmtCreate + "," + companyName + "," + serviceBeginDate + ","
+                        + serviceEndDate + "," + bizStatus + "," + payment_amount + "," + execPrice);
 
             }
         } catch (Exception e) {

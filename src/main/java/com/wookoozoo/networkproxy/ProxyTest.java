@@ -29,9 +29,11 @@ public class ProxyTest {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.setProperty("socksProxySet", "false");
-        System.setProperty("socksProxyHost", proxyHostName);
-        System.setProperty("socksProxyPort", "7079");
+        System.clearProperty("socksProxySet");
+        System.clearProperty("socksProxyHost");
+        System.clearProperty("socksProxyPort");
+//        System.setProperty("socksProxyHost", proxyHostName);
+//        System.setProperty("socksProxyPort", "7079");
         HttpClientNoPoolUtil.get("http://www.soso.com", null, null, null);
     }
 }
